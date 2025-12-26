@@ -1,7 +1,3 @@
-<img width="999" height="952" alt="llama" src="https://github.com/user-attachments/assets/eaae1c9c-7a32-45bc-be05-661038281edb" />
-<img width="996" height="942" alt="llama1" src="https://github.com/user-attachments/assets/5e189366-8a74-415e-9f6c-737680b5dece" />
-<img width="997" height="944" alt="llama2" src="https://github.com/user-attachments/assets/c122a806-b3b4-4e71-bad4-d863b8f8d595" />
-<img width="993" height="994" alt="llama3" src="https://github.com/user-attachments/assets/e463536d-f6c0-4467-ab3c-7a05fa7dd6c2" />
 # 🚀 AI Server Launcher
 
 **Advanced GUI application for managing llama.cpp and Open WebUI servers with flexible parameter configuration and multilingual support**
@@ -35,16 +31,16 @@
 ### 📋 Screenshots
 
 #### Main Interface
-<img width="999" height="952" alt="llama" src="https://github.com/user-attachments/assets/eaae1c9c-7a32-45bc-be05-661038281edb" />
+<img width="100" height="100" alt="llama" src="https://github.com/user-attachments/assets/eaae1c9c-7a32-45bc-be05-661038281edb" />
 
 #### Generation Parameters
-<img width="996" height="942" alt="llama1" src="https://github.com/user-attachments/assets/5e189366-8a74-415e-9f6c-737680b5dece" />
+<img width="100" height="100" alt="llama1" src="https://github.com/user-attachments/assets/5e189366-8a74-415e-9f6c-737680b5dece" />
 
 #### System Configuration
-<img width="997" height="944" alt="llama2" src="https://github.com/user-attachments/assets/c122a806-b3b4-4e71-bad4-d863b8f8d595" />
+<img width="100" height="100" alt="llama2" src="https://github.com/user-attachments/assets/c122a806-b3b4-4e71-bad4-d863b8f8d595" />
 
 #### Text Generation Parameters
-<img width="993" height="994" alt="llama3" src="https://github.com/user-attachments/assets/e463536d-f6c0-4467-ab3c-7a05fa7dd6c2" />
+<img width="100" height="100" alt="llama3" src="https://github.com/user-attachments/assets/e463536d-f6c0-4467-ab3c-7a05fa7dd6c2" />
 
 ### 🔧 System Requirements
 
