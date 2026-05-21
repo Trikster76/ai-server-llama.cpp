@@ -87,11 +87,9 @@ Built for users who prioritize **data autonomy**, **local execution**, and **har
 
 ### 📋 Screenshots
 
-#### System & Network Tab
-![System tab](https://github.com/user-attachments/assets/25c27368-fed0-4310-a91e-9e52466320ac)
-
-#### Main & Generation Tab
-![Main tab](https://github.com/user-attachments/assets/8c95295d-c0be-4165-a3b0-a564e6ad4cf0)
+<img width="1052" height="1032" alt="Image" src="https://github.com/user-attachments/assets/44aadc78-92de-43a0-adae-3fc7d1a0437f" />
+<img width="1052" height="1032" alt="Image" src="https://github.com/user-attachments/assets/571d769a-932d-4a1e-ba58-9d72229a986a" />
+<img width="1052" height="1032" alt="Image" src="https://github.com/user-attachments/assets/332064ed-d981-4088-b8f1-5df1392304ae" />
 
 ### 🔧 Requirements
 
@@ -237,11 +235,6 @@ curl -X POST http://127.0.0.1:8080/v1/embeddings \
 - Индикаторы состояния в статус-баре
 - Быстрое открытие Web UI в браузере
 
-### 📋 Скриншоты
-
-<img width="1052" height="1032" alt="Image" src="https://github.com/user-attachments/assets/44aadc78-92de-43a0-adae-3fc7d1a0437f" />
-<img width="1052" height="1032" alt="Image" src="https://github.com/user-attachments/assets/571d769a-932d-4a1e-ba58-9d72229a986a" />
-<img width="1052" height="1032" alt="Image" src="https://github.com/user-attachments/assets/332064ed-d981-4088-b8f1-5df1392304ae" />
 
 ### 🔧 Требования
 
