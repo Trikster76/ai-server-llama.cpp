@@ -1,8 +1,12 @@
-# 🚀 AI Server Launcher
+# 🧠 Neural Core: AI Server Launcher
 
-**Advanced GUI application for managing llama.cpp and Open WebUI servers with flexible parameter configuration and multilingual support**
+**Prestige v3.2 — Advanced GUI for managing llama.cpp and Open WebUI servers**
 
-[English](#english) | [Русский](#русский)
+[![Python](https://img.shields.io/badge/Python-3.10+-blue?logo=python)](https://python.org)
+[![ttkbootstrap](https://img.shields.io/badge/ttkbootstrap-1.6%2B-purple)](https://github.com/israel-dryer/ttkbootstrap)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green)](LICENSE)
+
+[English](#english) | [Русский](#русский) | [Українська](#українська)
 
 ---
 
@@ -10,214 +14,196 @@
 
 ### Overview
 
-**AI Server Launcher** is a powerful desktop application that simplifies the management of local AI language model servers. It provides an intuitive graphical interface for controlling:
+**Neural Core: AI Server Launcher** is a powerful desktop GUI application for managing local AI inference infrastructure. It provides a clean, feature-rich interface for running and configuring:
 
-- **llama.cpp Server** - High-performance inference engine for local LLM models
-- **Open WebUI** - Feature-rich web interface for interacting with LLMs
+- **llama.cpp Server** — high-performance local LLM inference engine (CPU/Vulkan/Mixed backends)
+- **Open WebUI** — modern web chat interface that connects to the llama.cpp API
 
-### ✨ Key Features
+All settings are saved per-model, so switching between models restores their individual configurations automatically.
 
-- 🎯 **Easy Server Management** - Start/stop servers with a single click
-- ⚙️ **Flexible Configuration** - Control all llama.cpp parameters from GUI
-- 🌍 **Multilingual Support** - Russian and English interface languages
-- 💾 **Smart Settings** - Automatic settings save/load per model
-- 🎨 **Multiple Themes** - Dark (Darkly), Light (Litera), and High Contrast (Superhero) modes
-- 🧠 **Intelligent Presets** - Auto-configuration for Chat, Instruct, Code, Story, Creative modes
-- 📊 **Real-time Logs** - Live monitoring of server output
-- 🚀 **GPU Acceleration** - Full support for GPU-accelerated inference
-- 🔒 **API Security** - Support for Bearer token authentication
-- 🖥️ **Network Access** - Configure server accessibility (localhost or network-wide)
+---
+
+### ✨ Features
+
+#### 🖥️ Interface & Themes
+- **4 UI themes**: Neural Core (Cyberpunk — default), Dark (Darkly), Light (Litera), High Contrast (Superhero)
+- **3 interface languages**: Russian, Ukrainian, English — switchable at runtime from the Settings menu
+- Monospace log terminal with theme-matched colors (cyan-on-black in Neural Core)
+
+#### ⚙️ Backend Selection
+- Switch between **CPU**, **Vulkan**, and **Mixed** llama.cpp backends via radio buttons
+- Each backend stores its own path to `server.exe` — all three can be configured simultaneously
+- Backend panel is **collapsible** to save screen space
+
+#### 📋 llama.cpp Configuration (Main & Generation tab)
+**Key Parameters:**
+| Parameter | Description | Default |
+|-----------|-------------|---------|
+| Port | Listening port | 8080 |
+| Context | Context window size (tokens) | 4096 |
+| GPU Layers | Layers to offload to GPU (-1 = all) | -1 |
+| CPU Threads | Parallel CPU threads | 8 |
+| Batch Size | Prompt processing batch | 512 |
+
+**Sampling / Generation Parameters** (with tooltips):
+| Parameter | Description | Default |
+|-----------|-------------|---------|
+| Temperature | Response randomness (0.0–2.0) | 0.7 |
+| Top-K | Top K token selection | 40 |
+| Top-P | Nucleus sampling threshold | 0.95 |
+| Repeat Penalty | Penalty for token repetition | 1.1 |
+
+**Flags:**
+- ✅ Jinja Template — use Jinja2 prompt formatting
+- ✅ No Warmup — skip model warmup at startup
+- ☐ Embedding Mode — enable embedding generation endpoint
+
+**Network & Performance:**
+- Host (default: `127.0.0.1`, use `0.0.0.0` for LAN access)
+- API Key (optional Bearer token authentication)
+- Lock model in RAM (`--mlock`)
+
+#### 🔧 System & Network tab — Advanced Parameters
+- **12 custom parameter slots** (split into 2 columns of 6): enter any llama.cpp flag name + value
+- **Raw Args field**: paste any additional flags as a raw string (e.g. `--kv-unified --cache-idle-slots`), parsed via `shlex` for correct handling of spaces and quotes
+
+#### 🧠 Model Presets
+Click **"Apply Model Preset"** to auto-configure sampling parameters based on the model filename:
+
+| Keyword in filename | Temperature | Top-K | Top-P | Repeat Penalty |
+|---------------------|-------------|-------|-------|----------------|
+| `chat` | 0.7 | 50 | 0.9 | — |
+| `instruct` | 0.2 | 40 | 0.95 | — |
+| `code` | 0.1 | 10 | 0.95 | 1.0 |
+| `story` | 0.9 | 0 | 0.9 | 1.15 |
+| `creative` | 1.0 | 0 | 0.9 | 1.15 |
+
+#### 💾 Per-Model Settings
+- Settings are **automatically saved** when starting the server
+- On model file selection, stored settings are **automatically restored**
+- "Reset Settings" resets all parameters to factory defaults
+
+#### 📊 Real-time Logs
+- Separate scrollable log terminal for llama.cpp and Open WebUI output
+- Color-coded status indicators in the status bar (🟢 running / 🔴 stopped)
+- "Open Web UI" button opens the server URL in the browser (active only when server is running)
+
+#### 🌐 Open WebUI Tab
+- Launch and stop `open-webui serve` process directly from the GUI
+- Separate log panel for Open WebUI output
+
+---
 
 ### 📋 Screenshots
 
-#### Main Interface
-<img width="100" height="100" alt="llama" src="https://github.com/user-attachments/assets/eaae1c9c-7a32-45bc-be05-661038281edb" />
+#### System & Network Tab
+![System tab](https://github.com/user-attachments/assets/eaae1c9c-7a32-45bc-be05-661038281edb)
 
-#### Generation Parameters
-<img width="100" height="100" alt="llama1" src="https://github.com/user-attachments/assets/5e189366-8a74-415e-9f6c-737680b5dece" />
+#### Main & Generation Tab
+![Main tab](https://github.com/user-attachments/assets/5e189366-8a74-415e-9f6c-737680b5dece)
 
-#### System Configuration
-<img width="100" height="100" alt="llama2" src="https://github.com/user-attachments/assets/c122a806-b3b4-4e71-bad4-d863b8f8d595" />
+---
 
-#### Text Generation Parameters
-<img width="100" height="100" alt="llama3" src="https://github.com/user-attachments/assets/e463536d-f6c0-4467-ab3c-7a05fa7dd6c2" />
+### 🔧 Requirements
 
-### 🔧 System Requirements
-
-- **Python**: 3.10 or higher (tested on 3.13.5)
-- **Operating System**: Windows, macOS, Linux
-- **RAM**: 8GB minimum (16GB+ recommended)
-- **VRAM**: 2GB minimum (for GPU acceleration)
+- **Python**: 3.10 or higher (tested on 3.13)
+- **OS**: Windows (primary), macOS, Linux
+- **RAM**: 8 GB minimum (16 GB+ recommended for large models)
+- **VRAM**: 2 GB minimum for GPU acceleration
+- **llama.cpp**: [latest release](https://github.com/ggerganov/llama.cpp/releases) — choose build matching your backend (CPU / Vulkan)
 
 ### 📦 Dependencies
 
 ```
-tkinter (included with Python)
 ttkbootstrap >= 1.6.0
 ```
 
+`tkinter`, `subprocess`, `threading`, `shlex`, `json`, `os`, `webbrowser` — all from Python standard library.
+
+---
+
 ### 🚀 Quick Start
 
-#### Installation
+```bash
+# 1. Clone
+git clone https://github.com/Trikster76/ai-server-llama.cpp.git
+cd ai-server-llama.cpp
 
-1. **Clone the repository**
-   ```bash
-   git clone https://github.com/Trikster76/ai-server-llama.cpp.git
-   cd ai-server-llama.cpp
-   ```
+# 2. Install dependencies
+pip install -r requirements.txt
 
-2. **Create virtual environment** (recommended)
-   ```bash
-   python -m venv venv
-   source venv/bin/activate  # On Windows: venv\Scripts\activate
-   ```
+# 3. Run
+python AI-Server-Launcher.py
+```
 
-3. **Install dependencies**
-   ```bash
-   pip install -r requirements.txt
-   ```
+#### First Run Checklist
+1. Click **"▸ Show Backends"** to expand the backend panel
+2. Select your backend (CPU / Vulkan / Mixed) and click **"Browse..."** to set `server.exe` path
+3. Click **"Browse..."** next to **Model** to select your `.gguf` file
+4. In **Main & Generation** tab: set port, context size, GPU layers
+5. Optionally click **"Apply Model Preset"** to auto-fill sampling parameters
+6. Click **"Run Llama.cpp"** — the server starts and logs appear below
+7. Click **"Open Web UI"** to open the API in your browser
 
-4. **Download llama.cpp**
-   - Download from [llama.cpp releases](https://github.com/ggerganov/llama.cpp/releases)
-   - Extract to a convenient location
-
-5. **Download a model**
-   - Get GGUF format models from [Hugging Face](https://huggingface.co/models?search=gguf)
-   - Popular choices: Llama 2, Mistral, Neural Chat
-
-6. **Run the application**
-   ```bash
-   python AI-Server-Launcher.py
-   ```
-
-#### First Run
-
-1. Open the application
-2. Select **"Browse..."** to choose your `llama-server.exe` executable
-3. Select **"Browse..."** to choose your GGUF model file
-4. Configure parameters in the **"Main"** tab (port, context, GPU layers, threads)
-5. Click **"Run Llama.cpp"** to start the server
-6. Open WebUI or access via API at `http://127.0.0.1:8080/v1/chat/completions`
-
-### ⚙️ Advanced Configuration
-
-#### Main Tab Parameters
-
-| Parameter | Description | Default | Notes |
-|-----------|-------------|---------|-------|
-| **Port** | Server listening port | 8080 | Use different ports for multiple instances |
-| **Context** | Token context window | 4096 | Larger = more memory usage |
-| **GPU Layers** | Layers to offload to GPU | -1 | -1 = all layers, increase for better performance |
-| **CPU Threads** | CPU threads for inference | 8 | Match your CPU core count |
-| **Batch Size** | Prompt batch size | 512 | Higher = faster but more VRAM usage |
-
-#### Generation Parameters (Sampling Tab)
-
-| Parameter | Description | Default | Range | Notes |
-|-----------|-------------|---------|-------|-------|
-| **Temperature** | Response creativity | 0.7 | 0.0-2.0 | Lower = more deterministic |
-| **Top-K** | Vocabulary filtering | 40 | 0-100 | Limits token selection to K most likely |
-| **Top-P** | Nucleus sampling | 0.95 | 0.0-1.0 | Cumulative probability threshold |
-| **Repeat Penalty** | Token repetition control | 1.1 | 1.0+ | Higher = less repetition |
-
-#### Network Settings (System & Network Tab)
-
-| Setting | Description | Default |
-|---------|-------------|---------|
-| **Host** | Binding address | 127.0.0.1 |
-| **API Key** | Bearer token (optional) | - |
-| **mlock** | Lock model in RAM | Enabled |
-
-### 🧠 Smart Presets
-
-The application includes intelligent presets that auto-configure parameters based on model type:
-
-- **Chat** - Balanced settings for conversational AI
-  - Temperature: 0.7, Top-K: 50, Top-P: 0.9
-- **Instruct** - Precise following of instructions
-  - Temperature: 0.2, Top-K: 40, Top-P: 0.95
-- **Code** - Optimized for code generation
-  - Temperature: 0.1, Top-K: 10, Top-P: 0.95, Repeat Penalty: 1.0
-- **Story** - Creative narrative generation
-  - Temperature: 0.9, Top-K: 0, Top-P: 0.9, Repeat Penalty: 1.15
-- **Creative** - Maximum creativity
-  - Temperature: 1.0, Top-K: 0, Top-P: 0.9, Repeat Penalty: 1.15
-
-Simply select a model with matching keywords (e.g., `mistral-chat.gguf`) and click "Apply Model Preset".
+---
 
 ### 🌐 API Usage
 
-Once the server is running, you can interact with it via HTTP API:
+Once the server is running:
 
-#### Chat Completions
 ```bash
+# Chat completions
 curl -X POST http://127.0.0.1:8080/v1/chat/completions \
   -H "Content-Type: application/json" \
-  -d '{
-    "model": "default",
-    "messages": [{"role": "user", "content": "Hello!"}],
-    "temperature": 0.7,
-    "max_tokens": 512
-  }'
-```
+  -d '{"model":"default","messages":[{"role":"user","content":"Hello!"}]}'
 
-#### Embeddings
-```bash
+# Embeddings (requires Embedding Mode flag)
 curl -X POST http://127.0.0.1:8080/v1/embeddings \
   -H "Content-Type: application/json" \
-  -d '{
-    "input": "Your text here",
-    "model": "default"
-  }'
+  -d '{"input":"Your text here","model":"default"}'
 ```
 
-### 📖 Documentation Files
-
-- **[FEATURES.md](docs/FEATURES.md)** - Detailed feature descriptions
-- **[INSTALL.md](docs/INSTALL.md)** - Advanced installation guide
-- **[API.md](docs/API.md)** - Complete API reference
-- **[TROUBLESHOOTING.md](docs/TROUBLESHOOTING.md)** - Common issues and solutions
+---
 
 ### 🐛 Troubleshooting
 
-**Q: "Llama.cpp executable not found"**
-- A: Make sure you selected the correct `llama-server.exe` file
+| Problem | Solution |
+|---------|----------|
+| "Executable not found" | Make sure the correct `server.exe` is selected for the active backend |
+| Server crashes on start | Reduce Context size or GPU Layers; check VRAM availability |
+| Poor GPU performance | Set GPU Layers to `-1`; update GPU drivers |
+| Open WebUI won't connect | Verify port; check that `open-webui` is installed (`pip install open-webui`) |
+| Settings not saving | Check write permissions in the app directory |
 
-**Q: Server starts but crashes immediately**
-- A: Check context size is less than model's max tokens, reduce GPU layers if out of VRAM
+---
 
-**Q: Poor performance on GPU**
-- A: Increase GPU layers (use -1 for all), ensure GPU drivers are updated
+### 📖 Documentation
 
-**Q: Open WebUI won't connect**
-- A: Verify port number is correct and firewall isn't blocking connections
+- [FEATURES.md](docs/FEATURES.md) — detailed feature list
+- [INSTALL.md](docs/INSTALL.md) — advanced installation
+- [API.md](docs/API.md) — API reference
+- [TROUBLESHOOTING.md](docs/TROUBLESHOOTING.md) — extended troubleshooting
+- [CHANGELOG.md](CHANGELOG.md) — version history
 
-See [TROUBLESHOOTING.md](docs/TROUBLESHOOTING.md) for more solutions.
+---
 
 ### 🤝 Contributing
 
-Contributions are welcome! Please feel free to:
+See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
 
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
+1. Fork → feature branch → PR
+2. Keep translations in sync across all 3 languages
+3. Test on both dark and light themes
 
 ### 📝 License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+MIT License — see [LICENSE](LICENSE)
 
-### 🙏 Acknowledgments
+### 🙏 Credits
 
-- [llama.cpp](https://github.com/ggerganov/llama.cpp) - High-performance LLM inference
-- [Open WebUI](https://github.com/open-webui/open-webui) - Modern web interface
-- [ttkbootstrap](https://github.com/israel-dryer/ttkbootstrap) - Modern Tkinter themes
-
-### 💬 Support
-
-- 📧 Issues: [GitHub Issues](https://github.com/Trikster76/ai-server-llama.cpp/issues)
-- 💡 Discussions: [GitHub Discussions](https://github.com/Trikster76/ai-server-llama.cpp/discussions)
+- [llama.cpp](https://github.com/ggerganov/llama.cpp)
+- [Open WebUI](https://github.com/open-webui/open-webui)
+- [ttkbootstrap](https://github.com/israel-dryer/ttkbootstrap)
 
 ---
 
@@ -225,200 +211,180 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ### Описание
 
-**AI Server Launcher** — это мощное приложение для рабочего стола, которое упрощает управление локальными серверами языковых моделей ИИ. Оно предоставляет интуитивный графический интерфейс для управления:
+**Neural Core: AI Server Launcher** (Prestige v3.2) — настольное приложение с графическим интерфейсом для управления локальными AI-серверами:
 
-- **Сервер llama.cpp** — высокопроизводительный движок для вывода локальных LLM моделей
-- **Open WebUI** — многофункциональный веб-интерфейс для взаимодействия с LLM
+- **llama.cpp** — движок вывода LLM (бэкенды CPU / Vulkan / Mixed)
+- **Open WebUI** — веб-чат интерфейс поверх API llama.cpp
 
-### ✨ Основные возможности
+Настройки сохраняются **отдельно для каждой модели** и восстанавливаются автоматически при её выборе.
 
-- 🎯 **Простое управление серверами** - Запуск/остановка серверов одним кликом
-- ⚙️ **Гибкая конфигурация** - Полный контроль параметров llama.cpp через GUI
-- 🌍 **Поддержка многих языков** - Интерфейс на русском и английском
-- 💾 **Умные настройки** - Автоматическое сохранение/загрузка настроек для каждой модели
-- 🎨 **Несколько тем** - Тёмная (Darkly), светлая (Litera) и контрастная (Superhero)
-- 🧠 **Интеллектуальные пресеты** - Автоконфигурация для режимов Chat, Instruct, Code, Story, Creative
-- 📊 **Живые логи** - Мониторинг вывода сервера в реальном времени
-- 🚀 **Ускорение на GPU** - Полная поддержка GPU-ускорения
-- 🔒 **Безопасность API** - Поддержка аутентификации через Bearer token
-- 🖥️ **Доступ в сети** - Конфигурация доступности сервера (локально или по сети)
+---
+
+### ✨ Возможности
+
+#### 🖥️ Интерфейс и темы
+- **4 темы оформления**: Neural Core (Cyberpunk, по умолчанию), Тёмная (Darkly), Светлая (Litera), Контрастная (Superhero)
+- **3 языка интерфейса**: Русский, Украинский, English — переключаются в меню «Настройки» без перезапуска
+- Терминал логов с шрифтом Consolas и цветовой схемой под активную тему
+
+#### ⚙️ Выбор бэкенда
+- Переключение между **CPU**, **Vulkan** и **Mixed** бэкендами llama.cpp через радиокнопки
+- Каждый бэкенд хранит свой путь к `server.exe` — все три можно настроить одновременно
+- Панель бэкендов **сворачивается** кнопкой «▸ Показать бэкенды»
+
+#### 📋 Вкладка «Основные и Генерация»
+**Ключевые параметры:**
+| Параметр | Описание | По умолчанию |
+|----------|----------|--------------|
+| Порт | Порт прослушивания сервера | 8080 |
+| Контекст | Размер контекстного окна (токены) | 4096 |
+| Слои ГПУ | Слои на GPU (-1 = все) | -1 |
+| Потоки ЦПУ | Параллельные потоки CPU | 8 |
+| Размер батча | Батч обработки промпта | 512 |
+
+**Параметры генерации** (с всплывающими подсказками):
+| Параметр | Описание | По умолчанию |
+|----------|----------|--------------|
+| Температура | Случайность (0.0–2.0) | 0.7 |
+| Top-K | Выборка из K лучших токенов | 40 |
+| Top-P | Ядерная выборка | 0.95 |
+| Штраф за повторения | Пенальти за повтор токенов | 1.1 |
+
+**Флаги** (чекбоксы):
+- Jinja Template — использовать Jinja2 шаблоны промптов
+- Без прогрева (no-warmup) — отключить прогрев модели
+- Embedding Mode — режим генерации эмбеддингов
+
+**Сетевые настройки и производительность:**
+- Хост (по умолчанию `127.0.0.1`, `0.0.0.0` для доступа по сети)
+- Ключ API (Bearer-токен, необязательно)
+- Блокировать в ОЗУ (`--mlock`)
+
+#### 🔧 Вкладка «Система и Сеть»
+- **12 слотов для кастомных параметров** (два столбца по 6): имя флага + значение в произвольном формате
+- **Поле Raw Args**: ввод любых дополнительных флагов строкой (например: `--kv-unified --cache-idle-slots`), парсится через `shlex`
+
+#### 🧠 Пресеты моделей
+Кнопка **«Применить пресет модели»** автоматически настраивает параметры генерации по ключевому слову в имени файла модели:
+
+| Ключевое слово | Температура | Top-K | Top-P | Штраф |
+|----------------|-------------|-------|-------|-------|
+| `chat` | 0.7 | 50 | 0.9 | — |
+| `instruct` | 0.2 | 40 | 0.95 | — |
+| `code` | 0.1 | 10 | 0.95 | 1.0 |
+| `story` | 0.9 | 0 | 0.9 | 1.15 |
+| `creative` | 1.0 | 0 | 0.9 | 1.15 |
+
+#### 💾 Настройки per-model
+- Настройки **автоматически сохраняются** при запуске сервера
+- При выборе файла модели настройки **автоматически восстанавливаются**
+- Кнопка «Сбросить настройки» возвращает все значения к заводским
+
+#### 📊 Логи и статус
+- Отдельные прокручиваемые логи для llama.cpp и Open WebUI
+- Цветные индикаторы статуса в статус-баре (🟢 запущен / 🔴 остановлен)
+- Кнопка «Открыть Web UI» открывает адрес сервера в браузере (активна только когда сервер работает)
+
+---
 
 ### 🔧 Требования
 
-- **Python**: 3.10 или выше (протестировано на 3.13.5)
-- **ОС**: Windows, macOS, Linux
-- **ОЗУ**: минимум 8GB (рекомендуется 16GB+)
-- **VRAM**: минимум 2GB (для ускорения на GPU)
+- **Python**: 3.10+ (протестировано на 3.13)
+- **ОС**: Windows (основная), macOS, Linux
+- **ОЗУ**: минимум 8 ГБ (рекомендуется 16 ГБ+)
+- **VRAM**: от 2 ГБ для GPU-ускорения
+- **llama.cpp**: [последний релиз](https://github.com/ggerganov/llama.cpp/releases)
 
 ### 📦 Зависимости
 
 ```
-tkinter (входит в Python)
 ttkbootstrap >= 1.6.0
 ```
 
+---
+
 ### 🚀 Быстрый старт
 
-#### Установка
-
-1. **Клонировать репозиторий**
-   ```bash
-   git clone https://github.com/Trikster76/ai-server-llama.cpp.git
-   cd ai-server-llama.cpp
-   ```
-
-2. **Создать виртуальное окружение** (рекомендуется)
-   ```bash
-   python -m venv venv
-   source venv/bin/activate  # На Windows: venv\Scripts\activate
-   ```
-
-3. **Установить зависимости**
-   ```bash
-   pip install -r requirements.txt
-   ```
-
-4. **Загрузить llama.cpp**
-   - Скачайте с [llama.cpp releases](https://github.com/ggerganov/llama.cpp/releases)
-   - Распакуйте в удобное место
-
-5. **Загрузить модель**
-   - Получите модели в формате GGUF с [Hugging Face](https://huggingface.co/models?search=gguf)
-   - Популярные: Llama 2, Mistral, Neural Chat
-
-6. **Запустить приложение**
-   ```bash
-   python AI-Server-Launcher.py
-   ```
+```bash
+git clone https://github.com/Trikster76/ai-server-llama.cpp.git
+cd ai-server-llama.cpp
+pip install -r requirements.txt
+python AI-Server-Launcher.py
+```
 
 #### Первый запуск
+1. Нажмите **«▸ Показать бэкенды»**, выберите бэкенд и укажите путь к `server.exe`
+2. Нажмите **«Обзор...»** рядом с «Модель» и выберите `.gguf` файл
+3. Настройте параметры во вкладке **«Основные и Генерация»**
+4. Нажмите **«Применить пресет модели»** при необходимости
+5. Нажмите **«Запустить Llama.cpp»** — сервер запустится, логи появятся ниже
+6. Нажмите **«Открыть Web UI»** для доступа к API в браузере
 
-1. Откройте приложение
-2. Нажмите **"Обзор..."** и выберите файл `llama-server.exe`
-3. Нажмите **"Обзор..."** и выберите файл модели в формате GGUF
-4. Настройте параметры в табе **"Основные"** (порт, контекст, слои GPU, потоки)
-5. Нажмите **"Запустить Llama.cpp"** для запуска сервера
-6. Откройте WebUI или используйте API по адресу `http://127.0.0.1:8080/v1/chat/completions`
+---
 
-### ⚙️ Продвинутая конфигурация
+### 🌐 Использование API
 
-#### Параметры вкладки "Основные"
-
-| Параметр | Описание | По умолчанию | Примечания |
-|----------|---------|--------------|-----------|
-| **Порт** | Порт прослушивания сервера | 8080 | Используйте разные порты для разных инстансов |
-| **Контекст** | Размер контекста в токенах | 4096 | Больше = больше памяти |
-| **Слои ГПУ** | Слои для выгрузки на GPU | -1 | -1 = все слои, увеличивайте для лучшей производительности |
-| **Потоки ЦПУ** | Потоки ЦПУ для вывода | 8 | Установите равным количеству ядер ЦПУ |
-| **Размер батча** | Размер батча для промпта | 512 | Больше = быстрее, но больше использование VRAM |
-
-#### Параметры генерации (вкладка "Генерация")
-
-| Параметр | Описание | По умолчанию | Диапазон | Примечания |
-|----------|---------|--------------|----------|-----------|
-| **Температура** | Творческость ответа | 0.7 | 0.0-2.0 | Ниже = более предсказуемо |
-| **Top-K** | Фильтрация словаря | 40 | 0-100 | Ограничивает выбор K самых вероятных токенов |
-| **Top-P** | Выборка ядра | 0.95 | 0.0-1.0 | Порог кумулятивной вероятности |
-| **Штраф повтора** | Контроль повтора токенов | 1.1 | 1.0+ | Выше = меньше повторений |
-
-#### Сетевые настройки (вкладка "Система и Сеть")
-
-| Настройка | Описание | По умолчанию |
-|-----------|---------|--------------|
-| **Хост** | Адрес привязки | 127.0.0.1 |
-| **Ключ API** | Bearer token (опционально) | - |
-| **mlock** | Блокировка модели в ОЗУ | Включено |
-
-### 🧠 Умные пресеты
-
-Приложение включает интеллектуальные пресеты, которые автоматически конфигурируют параметры на основе типа модели:
-
-- **Chat** - Сбалансированные параметры для диалога
-  - Температура: 0.7, Top-K: 50, Top-P: 0.9
-- **Instruct** - Точное следование инструкциям
-  - Температура: 0.2, Top-K: 40, Top-P: 0.95
-- **Code** - Оптимизировано для генерации кода
-  - Температура: 0.1, Top-K: 10, Top-P: 0.95, Штраф: 1.0
-- **Story** - Творческая генерация текста
-  - Температура: 0.9, Top-K: 0, Top-P: 0.9, Штраф: 1.15
-- **Creative** - Максимальная творческость
-  - Температура: 1.0, Top-K: 0, Top-P: 0.9, Штраф: 1.15
-
-Просто выберите модель с соответствующим названием (например, `mistral-chat.gguf`) и нажмите "Применить пресет модели".
-
-### 🌐 API использование
-
-Когда сервер запущен, вы можете взаимодействовать с ним через HTTP API:
-
-#### Chat Completions
 ```bash
 curl -X POST http://127.0.0.1:8080/v1/chat/completions \
   -H "Content-Type: application/json" \
-  -d '{
-    "model": "default",
-    "messages": [{"role": "user", "content": "Привет!"}],
-    "temperature": 0.7,
-    "max_tokens": 512
-  }'
+  -d '{"model":"default","messages":[{"role":"user","content":"Привет!"}]}'
 ```
 
-#### Embeddings
-```bash
-curl -X POST http://127.0.0.1:8080/v1/embeddings \
-  -H "Content-Type: application/json" \
-  -d '{
-    "input": "Ваш текст здесь",
-    "model": "default"
-  }'
-```
-
-### 📖 Документация
-
-- **[FEATURES.md](docs/FEATURES.md)** - Подробное описание возможностей
-- **[INSTALL.md](docs/INSTALL.md)** - Расширенное руководство установки
-- **[API.md](docs/API.md)** - Полный справочник API
-- **[TROUBLESHOOTING.md](docs/TROUBLESHOOTING.md)** - Решение типичных проблем
+---
 
 ### 🐛 Решение проблем
 
-**В: "Исполняемый файл Llama.cpp не найден"**
-- О: Убедитесь, что выбран правильный файл `llama-server.exe`
+| Проблема | Решение |
+|----------|---------|
+| «Исполняемый файл не найден» | Убедитесь, что выбран правильный `server.exe` для активного бэкенда |
+| Сервер падает при запуске | Уменьшите Контекст или Слои ГПУ; проверьте объём VRAM |
+| Плохая производительность GPU | Установите Слои ГПУ = `-1`; обновите драйверы |
+| Open WebUI не подключается | Проверьте порт; убедитесь что `open-webui` установлен |
+| Настройки не сохраняются | Проверьте права на запись в папку с программой |
 
-**В: Сервер запускается но сразу крашится**
-- О: Проверьте, что размер контекста меньше максимума модели, уменьшите слои GPU если недостаточно VRAM
+---
 
-**В: Плохая производительность на GPU**
-- О: Увеличьте количество слоев GPU (используйте -1 для всех), обновите драйверы GPU
+### 📖 Документация
 
-**В: Open WebUI не подключается**
-- О: Проверьте корректность номера порта и что брандмауэр не блокирует соединения
+- [FEATURES.md](docs/FEATURES.md), [INSTALL.md](docs/INSTALL.md), [API.md](docs/API.md), [TROUBLESHOOTING.md](docs/TROUBLESHOOTING.md)
+- [CHANGELOG.md](CHANGELOG.md)
 
-Смотрите [TROUBLESHOOTING.md](docs/TROUBLESHOOTING.md) для большего количества решений.
+---
 
-### 🤝 Внесение вклада
+## Українська
 
-Приветствуются контрибьюции! Вы можете:
+### Опис
 
-1. Сделать fork репозитория
-2. Создать ветку для вашей функции (`git checkout -b feature/amazing-feature`)
-3. Сделать commit изменений (`git commit -m 'Add amazing feature'`)
-4. Отправить ветку (`git push origin feature/amazing-feature`)
-5. Открыть Pull Request
+**Neural Core: AI Server Launcher** (Prestige v3.2) — настільний застосунок з графічним інтерфейсом для керування локальними AI-серверами:
 
-### 📝 Лицензия
+- **llama.cpp** — двигун виводу LLM (бекенди CPU / Vulkan / Mixed)
+- **Open WebUI** — веб-чат інтерфейс поверх API llama.cpp
 
-Этот проект распространяется под лицензией MIT - смотрите файл [LICENSE](LICENSE) для деталей.
+Налаштування зберігаються **окремо для кожної моделі** і відновлюються автоматично при її виборі.
 
-### 🙏 Спасибо
+---
 
-- [llama.cpp](https://github.com/ggerganov/llama.cpp) - Высокопроизводительный вывод LLM
-- [Open WebUI](https://github.com/open-webui/open-webui) - Современный веб-интерфейс
-- [ttkbootstrap](https://github.com/israel-dryer/ttkbootstrap) - Современные темы Tkinter
+### ✨ Можливості
 
-### 💬 Поддержка
+- **4 теми оформлення**: Neural Core (Cyberpunk), Темна, Світла, Контрастна
+- **3 мови інтерфейсу**: Українська, Русский, English — перемикаються без перезапуску
+- Вибір бекенду: **CPU / Vulkan / Mixed** — кожен зберігає свій шлях до `server.exe`
+- **12 слотів** для кастомних параметрів + поле **Raw Args** для довільних прапорців
+- Пресети моделей: chat, instruct, code, story, creative
+- Збереження налаштувань per-model + кнопка скидання
+- Логи llama.cpp і Open WebUI в реальному часі
+- Керування Open WebUI (запуск/зупинка) з окремої вкладки
 
-- 📧 Issues: [GitHub Issues](https://github.com/Trikster76/ai-server-llama.cpp/issues)
-- 💡 Discussions: [GitHub Discussions](https://github.com/Trikster76/ai-server-llama.cpp/discussions)
+---
+
+### 🚀 Швидкий старт
+
+```bash
+git clone https://github.com/Trikster76/ai-server-llama.cpp.git
+cd ai-server-llama.cpp
+pip install -r requirements.txt
+python AI-Server-Launcher.py
+```
 
 ---
 
