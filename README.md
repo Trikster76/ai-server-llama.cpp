@@ -97,10 +97,10 @@ Click **"Apply Model Preset"** to auto-configure sampling parameters based on th
 ### 📋 Screenshots
 
 #### System & Network Tab
-![System tab](https://github.com/user-attachments/assets/eaae1c9c-7a32-45bc-be05-661038281edb)
+![System tab](https://github.com/user-attachments/assets/25c27368-fed0-4310-a91e-9e52466320ac)
 
 #### Main & Generation Tab
-![Main tab](https://github.com/user-attachments/assets/5e189366-8a74-415e-9f6c-737680b5dece)
+![Main tab](https://github.com/user-attachments/assets/8c95295d-c0be-4165-a3b0-a564e6ad4cf0)
 
 ---
 
