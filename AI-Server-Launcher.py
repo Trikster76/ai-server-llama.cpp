@@ -520,6 +520,8 @@ class LlamaCppGUI(ttk.Window):
             self.style.theme_use(initial_theme)
             self.theme_var = tk.StringVar(value=initial_theme)
             
+        self.apply_custom_theme_overrides()
+            
         self.language = tk.StringVar(value=initial_lang)
         
         self.settings_file = "launcher_settings.json"
@@ -529,9 +531,9 @@ class LlamaCppGUI(ttk.Window):
 
         self.title(self.translate("app_title"))
         try:
-            self.iconbitmap(r"G:\Program Files\icon\llama.ico")
+            self.iconbitmap(r"G:\Проект\llama1.ico")
         except Exception:
-            pass  # Ігнорувати, якщо іконка не знайдена
+            pass  # Ігнорувати, если иконка не найдена
         self.geometry("1050x1000")
         
         self.create_menu()
@@ -544,8 +546,7 @@ class LlamaCppGUI(ttk.Window):
 
     def create_custom_theme(self):
         """Инжектим кастомную тему в стиле Neural Core"""
-        from ttkbootstrap.style import ThemeDefinition
-        from ttkbootstrap import Colors
+        from ttkbootstrap.style import ThemeDefinition, Colors
 
         colors = Colors(
             primary="#00f0ff",      # Cyan (Main accents)
@@ -573,6 +574,25 @@ class LlamaCppGUI(ttk.Window):
         )
 
         self.style.register_theme(td)
+
+    def apply_custom_theme_overrides(self):
+        """Применяет исправления стилей для темы Neural Core (cyberpunk)"""
+        theme_name = self.style.theme.name
+        if theme_name == "neural_core":
+            # Исправляем нечитаемый текст на вкладках (Notebook tabs)
+            for style_name in ["TNotebook.Tab", "primary.TNotebook.Tab", "secondary.TNotebook.Tab", "Secondary.TNotebook.Tab", "Primary.TNotebook.Tab"]:
+                self.style.map(
+                    style_name,
+                    foreground=[("selected", "#00f0ff"), ("!selected", "#a3c2c2")],
+                    background=[("selected", "#0a0f18"), ("!selected", "#131c2a")]
+                )
+            
+            # Исправляем нечитаемые readonly поля ввода (Entry)
+            self.style.map(
+                "TEntry",
+                fieldbackground=[("readonly", "#131c2a")],
+                foreground=[("readonly", "#a3c2c2")]
+            )
 
     def translate(self, key):
         return TRANSLATIONS.get(key, {}).get(self.language.get(), key)
@@ -1105,6 +1125,7 @@ class LlamaCppGUI(ttk.Window):
     def on_theme_change(self):
         theme = self.theme_var.get()
         self.style.theme_use(theme)
+        self.apply_custom_theme_overrides()
         self.apply_theme_to_logs()
         self.save_app_config()
 
