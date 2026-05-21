@@ -5,6 +5,7 @@
 [![Python](https://img.shields.io/badge/Python-3.10+-blue?logo=python)](https://python.org)
 [![ttkbootstrap](https://img.shields.io/badge/ttkbootstrap-1.6%2B-purple)](https://github.com/israel-dryer/ttkbootstrap)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green)](LICENSE)
+[![Download](https://img.shields.io/github/v/release/Trikster76/ai-server-llama.cpp?label=Download&color=brightgreen)](https://github.com/Trikster76/ai-server-llama.cpp/releases/latest)
 
 [English](#english) | [Русский](#русский)
 
