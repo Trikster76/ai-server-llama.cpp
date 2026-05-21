@@ -158,7 +158,7 @@ curl -X POST http://127.0.0.1:8080/v1/embeddings \
 - [CHANGELOG.md](CHANGELOG.md)
 - [CONTRIBUTING.md](CONTRIBUTING.md)
 - [LICENSE](LICENSE)
-[![Download](https://img.shields.io/github/v/release/Trikster76/ai-server-llama.cpp?label=Download&color=brightgreen)](https://github.com/Trikster76/ai-server-llama.cpp/releases/latest)
+- [![Download](https://img.shields.io/github/v/release/Trikster76/ai-server-llama.cpp?label=Download&color=brightgreen)](https://github.com/Trikster76/ai-server-llama.cpp/releases/latest)
 ---
 
 ## Русский
