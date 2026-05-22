@@ -22,9 +22,10 @@ Built for users who prioritize **data autonomy**, **local execution**, and **har
 ### ✨ Core Features
 
 #### 🖥️ Interface & Aesthetics
-- **4 UI themes**: Neural Core (Cyberpunk — default), Dark (Darkly), Light (Litera), High Contrast (Superhero)
+- **4 UI themes**: Neural Core (Cyberpunk — default, fully optimized for startup rendering), Dark (Darkly), Light (Litera), High Contrast (Superhero)
 - **2 interface languages**: English and Russian
-- Integrated monospace log terminal with theme-matched colors
+- **Dynamic Monospace Fonts**: Choose terminal log fonts on-the-fly (`Settings -> Font`), including narrow and tall options to save screen width (e.g., **Iosevka**, **Ubuntu Mono**, **Inconsolata**, **Victor Mono**)
+- **Polished Layout**: Beautiful padding and spacing inside all blocks and parameters so elements never touch frames
 
 #### ⚙️ Smart Backend Routing
 - Switch between **CPU**, **Vulkan**, and **Mixed** backends
@@ -112,7 +113,7 @@ ttkbootstrap >= 1.6.0
 git clone https://github.com/Trikster76/ai-server-llama.cpp.git
 cd ai-server-llama.cpp
 pip install -r requirements.txt
-python AI-Server-Launcher.py
+python AI_Server_05.2026.py
 ```
 
 ### First Run Checklist
@@ -159,13 +160,8 @@ curl -X POST http://127.0.0.1:8080/v1/embeddings \
 - [CONTRIBUTING.md](CONTRIBUTING.md)
 - [LICENSE](LICENSE)
 
+---
 
-[![Python](https://img.shields.io/badge/Python-3.10+-blue?logo=python)](https://python.org)
-[![ttkbootstrap](https://img.shields.io/badge/ttkbootstrap-1.6%2B-purple)](https://github.com/israel-dryer/ttkbootstrap)
-[![License: MIT](https://img.shields.io/badge/License-MIT-green)](LICENSE)
-[![Download](https://img.shields.io/github/v/release/Trikster76/ai-server-llama.cpp?label=Download&color=brightgreen)](https://github.com/Trikster76/ai-server-llama.cpp/releases/latest)
-
-[English](#english) | [Русский](#русский)
 ## Русский
 
 ### Описание
@@ -177,9 +173,10 @@ curl -X POST http://127.0.0.1:8080/v1/embeddings \
 ### ✨ Главные возможности
 
 #### 🖥️ Интерфейс и эстетика
-- **4 темы оформления**: Neural Core (Cyberpunk — по умолчанию), Darkly, Litera, Superhero
+- **4 темы оформления**: Neural Core (Cyberpunk — по умолчанию, полностью исправлена отрисовка при первом старте), Darkly, Litera, Superhero
 - **2 языка интерфейса**: Русский и English
-- Встроенный терминал логов с моноширинным шрифтом
+- **Динамический выбор шрифтов логов**: Переключайте моноширинные шрифты "на лету" (`Настройки -> Шрифт`), включая узкие и высокие варианты для экономии места по ширине терминала (например, **Iosevka**, **Ubuntu Mono**, **Inconsolata**, **Victor Mono**)
+- **Улучшенные отступы**: Добавлен внутренний padding для всех блоков `LabelFrame`, чтобы элементы управления гармонично смотрелись и не прилегали к границам рамок
 
 #### ⚙️ Умная маршрутизация бэкендов
 - Переключение между **CPU**, **Vulkan** и **Mixed**
@@ -191,10 +188,10 @@ curl -X POST http://127.0.0.1:8080/v1/embeddings \
 
 | Параметр | Описание | По умолчанию |
 |----------|----------|--------------|
-| Порт | Порт API | 8080 |
+| Порт | API-порт | 8080 |
 | Контекст | Размер окна контекста в токенах | 4096 |
 | Слои ГПУ | Выгрузка слоёв в VRAM (`-1` = максимум) | -1 |
-| Потоки ЦПУ | Количество потоков CPU | 8 |
+| Потоки ЦПУ | Количество параллельных потоков CPU | 8 |
 | Размер батча | Размер батча обработки промпта | 512 |
 
 **Параметры генерации:**
@@ -241,7 +238,6 @@ curl -X POST http://127.0.0.1:8080/v1/embeddings \
 - Индикаторы состояния в статус-баре
 - Быстрое открытие Web UI в браузере
 
-
 ### 🔧 Требования
 
 - **Python**: 3.10 или выше
@@ -262,7 +258,7 @@ ttkbootstrap >= 1.6.0
 git clone https://github.com/Trikster76/ai-server-llama.cpp.git
 cd ai-server-llama.cpp
 pip install -r requirements.txt
-python AI-Server-Launcher.py
+python AI_Server_05.2026.py
 ```
 
 ### Первый запуск
@@ -311,4 +307,4 @@ curl -X POST http://127.0.0.1:8080/v1/embeddings \
 
 ---
 
-**Made with ❤️ by [Trikster76](https://github.com/Trikster76)**
+**Made with  by [Trikster76](https://github.com/Trikster76)**
