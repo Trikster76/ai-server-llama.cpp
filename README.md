@@ -89,6 +89,7 @@ Built for users who prioritize **data autonomy**, **local execution**, and **har
 
 ### 📋 Screenshots
 
+<img width="1042" height="995" alt="Image" src="https://github.com/user-attachments/assets/34c98f33-0d12-41cb-ba7d-113691cba3c0" />
 <img width="1052" height="1032" alt="Image" src="https://github.com/user-attachments/assets/44aadc78-92de-43a0-adae-3fc7d1a0437f" />
 <img width="1052" height="1032" alt="Image" src="https://github.com/user-attachments/assets/571d769a-932d-4a1e-ba58-9d72229a986a" />
 <img width="1052" height="1032" alt="Image" src="https://github.com/user-attachments/assets/332064ed-d981-4088-b8f1-5df1392304ae" />
