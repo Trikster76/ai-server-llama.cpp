@@ -1447,7 +1447,8 @@ class LlamaCppGUI(ttk.Window):
         self.stop_process("llama")
     
     def start_webui_server(self): 
-        self.start_process("webui", lambda: self.webui_cmd.get().strip().split())
+        cmd = self.webui_cmd.get().strip()
+        self.start_process("webui", lambda: cmd if os.name == 'nt' else cmd.split())
     
     def stop_webui_server(self): 
         self.stop_process("webui")
@@ -1460,7 +1461,8 @@ class LlamaCppGUI(ttk.Window):
             self.save_settings()
         
         self.log_message(p_type, self.translate("starting_server").format(p_type=p_type.upper()))
-        self.log_message(p_type, self.translate("command") + " ".join(f'"{c}"' if " " in c else c for c in command))
+        cmd_str = command if isinstance(command, str) else " ".join(f'"{c}"' if " " in c else c for c in command)
+        self.log_message(p_type, self.translate("command") + cmd_str)
         
         try:
             env = os.environ.copy()
@@ -1471,9 +1473,6 @@ class LlamaCppGUI(ttk.Window):
                 command, 
                 stdout=subprocess.PIPE, 
                 stderr=subprocess.STDOUT, 
-                text=True,
-                encoding='utf-8', 
-                errors='replace',
                 creationflags=subprocess.CREATE_NO_WINDOW if os.name == 'nt' else 0,
                 shell=(p_type == 'webui' and os.name == 'nt'), 
                 env=env
@@ -1500,8 +1499,15 @@ class LlamaCppGUI(ttk.Window):
     
     def read_output(self, p_type):
         if process := self.processes[p_type]:
-            for line in iter(process.stdout.readline, ''): 
-                self.after(0, self.log_message, p_type, line.strip())
+            for line in iter(process.stdout.readline, b''): 
+                try:
+                    text_line = line.decode('utf-8')
+                except UnicodeDecodeError:
+                    try:
+                        text_line = line.decode('cp866')
+                    except UnicodeDecodeError:
+                        text_line = line.decode('cp1251', errors='replace')
+                self.after(0, self.log_message, p_type, text_line.strip())
             process.stdout.close()
     
     def log_message(self, p_type, message):
