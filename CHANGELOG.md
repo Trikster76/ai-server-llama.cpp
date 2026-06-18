@@ -5,6 +5,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [06.2026] - 2026-06-18
+
+### Added
+- Individual checkboxes for all 12 custom parameters, allowing toggling without clearing values.
+- New narrow monospace fonts (Inconsolata, Victor Mono, Fira Code, DejaVu Sans Mono) in settings to save horizontal space in logs.
+
+### Fixed
+- Initialization bug with the 'Neural Core' cyberpunk theme displaying incorrectly on first startup.
+
 ## [1.0.0] - 2025-12-26
 
 ### Added
