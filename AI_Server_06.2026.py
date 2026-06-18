@@ -1448,6 +1448,7 @@ class LlamaCppGUI(ttk.Window):
     
     def start_webui_server(self): 
         cmd = self.webui_cmd.get().strip()
+        self.save_app_config()
         self.start_process("webui", lambda: cmd if os.name == 'nt' else cmd.split())
     
     def stop_webui_server(self): 
@@ -1574,6 +1575,8 @@ class LlamaCppGUI(ttk.Window):
         config['app_language'] = self.language.get()
         config['app_theme'] = self.theme_var.get()
         config['app_font'] = self.font_var.get()
+        config["server_paths"] = {k: v.get() for k, v in self.server_paths.items()}
+        config["webui_cmd"] = self.webui_cmd.get()
         
         with open(self.settings_file, 'w', encoding='utf-8') as f:
             json.dump(config, f, indent=4)
@@ -1688,6 +1691,7 @@ class LlamaCppGUI(ttk.Window):
             pass
     
     def on_closing(self):
+        self.save_app_config()
         if self.processes["llama"]: 
             self.stop_process("llama")
         if self.processes["webui"]: 
