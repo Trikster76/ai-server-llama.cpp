@@ -404,6 +404,11 @@ TRANSLATIONS = {
         "en": "Open WebUI is launched with 'open-webui serve'. Make sure Open WebUI is installed.",
         "uk": "Open WebUI запускається командою 'open-webui serve'. Переконайтеся, що Open WebUI встановлено."
     },
+    "webui_cmd_label": {
+        "ru": "Команда запуска:",
+        "en": "Start Command:",
+        "uk": "Команда запуску:"
+    },
     "select_server_exe": {
         "ru": "Выберите server.exe", 
         "en": "Select server.exe",
@@ -641,6 +646,7 @@ class LlamaCppGUI(ttk.Window):
             "mixed": tk.StringVar()
         }
         self.selected_backend = tk.StringVar(value="cpu")  # Default to CPU
+        self.webui_cmd = tk.StringVar(value="open-webui serve")
         
         # Словники для зберігання посилань на віджети бекендів
         self.backend_labels = {}
@@ -1125,13 +1131,12 @@ class LlamaCppGUI(ttk.Window):
         self.webui_control_frame = ttk.LabelFrame(parent, text=self.translate("webui_controls"))
         self.webui_control_frame.grid(row=0, column=0, sticky="ew", padx=5, pady=5)
         
-        # Інформація про WebUI
-        info_frame = ttk.Frame(self.webui_control_frame)
-        info_frame.pack(fill=X, pady=(10, 10), padx=10)
+        # Команда запуску WebUI
+        cmd_frame = ttk.Frame(self.webui_control_frame)
+        cmd_frame.pack(fill=X, pady=(10, 10), padx=10)
         
-        info_text = ttk.Label(info_frame, text=self.translate("info_webui"), 
-                             font=("", 8), foreground="gray")
-        info_text.pack(anchor="w")
+        ttk.Label(cmd_frame, text=self.translate("webui_cmd_label")).pack(side=LEFT, padx=(0, 5))
+        ttk.Entry(cmd_frame, textvariable=self.webui_cmd, width=40).pack(side=LEFT, fill=X, expand=True)
         
         # Кнопки керування WebUI
         buttons_frame = ttk.Frame(self.webui_control_frame)
@@ -1442,7 +1447,7 @@ class LlamaCppGUI(ttk.Window):
         self.stop_process("llama")
     
     def start_webui_server(self): 
-        self.start_process("webui", lambda: ["open-webui", "serve"])
+        self.start_process("webui", lambda: self.webui_cmd.get().strip().split())
     
     def stop_webui_server(self): 
         self.stop_process("webui")
@@ -1590,6 +1595,7 @@ class LlamaCppGUI(ttk.Window):
         
         config["last_model_path"] = model_path
         config["server_paths"] = {k: v.get() for k, v in self.server_paths.items()}
+        config["webui_cmd"] = self.webui_cmd.get()
         
         config['app_language'] = self.language.get()
         config['app_theme'] = self.theme_var.get()
@@ -1661,6 +1667,10 @@ class LlamaCppGUI(ttk.Window):
             for backend, path in server_paths.items():
                 if backend in self.server_paths:
                     self.server_paths[backend].set(path)
+            
+            # Завантажуємо команду WebUI
+            if "webui_cmd" in config:
+                self.webui_cmd.set(config["webui_cmd"])
             
             # Завантажуємо останню модель
             if last_model := config.get("last_model_path", ""):
