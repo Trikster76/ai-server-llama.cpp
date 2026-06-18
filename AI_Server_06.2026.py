@@ -44,6 +44,11 @@ TRANSLATIONS = {
         "en": "Theme",
         "uk": "Тема"
     },
+    "font_menu": {
+        "ru": "Шрифт", 
+        "en": "Font",
+        "uk": "Шрифт"
+    },
     "theme_neural": {
         "ru": "Neural Core (Cyberpunk)", 
         "en": "Neural Core (Cyberpunk)",
@@ -503,8 +508,8 @@ class CollapsibleFrame(ttk.Frame):
 # ==================================================================================================
 class LlamaCppGUI(ttk.Window):
     def __init__(self):
-        # 1. Читаем конфиг, чтобы понять, какой язык и тему хочет юзер
-        initial_theme, initial_lang = self.load_app_config_statically()
+        # 1. Читаем конфиг, чтобы понять, какой язык, тему и шрифт хочет юзер
+        initial_theme, initial_lang, initial_font = self.load_app_config_statically()
         
         # 2. Инициализируем окно базовой темой (темной), чтобы получить доступ к Style
         super().__init__(themename="darkly")
@@ -512,17 +517,10 @@ class LlamaCppGUI(ttk.Window):
         # 3. Инжектим нашу кастомную Neural Core тему
         self.create_custom_theme()
         
-        # 4. Применяем нужную тему (если в конфиге neural_core, ставим ее)
-        if initial_theme == "neural_core" or initial_theme not in self.style.theme_names():
-            self.style.theme_use("neural_core")
-            self.theme_var = tk.StringVar(value="neural_core")
-        else:
-            self.style.theme_use(initial_theme)
-            self.theme_var = tk.StringVar(value=initial_theme)
-            
-        self.apply_custom_theme_overrides()
-            
+        # 4. Инициализируем переменные конфигурации
+        self.theme_var = tk.StringVar(value=initial_theme)
         self.language = tk.StringVar(value=initial_lang)
+        self.font_var = tk.StringVar(value=initial_font)
         
         self.settings_file = "launcher_settings.json"
         self.processes = {"llama": None, "webui": None}
@@ -533,11 +531,20 @@ class LlamaCppGUI(ttk.Window):
         try:
             self.iconbitmap(r"G:\Проект\llama1.ico")
         except Exception:
-            pass  # Ігнорувати, если иконка не найдена
+            pass  # Игнорировать, если иконка не найдена
         self.geometry("1050x1000")
         
         self.create_menu()
         self.create_widgets()
+        
+        # 5. Применяем нужную тему ПОСЛЕ создания виджетов.
+        # Это заставляет ttkbootstrap корректно обновить все стили созданных виджетов.
+        if initial_theme == "neural_core" or initial_theme not in self.style.theme_names():
+            self.style.theme_use("neural_core")
+        else:
+            self.style.theme_use(initial_theme)
+            
+        self.apply_custom_theme_overrides()
         self.create_status_bar()
 
         self.load_initial_settings()
@@ -599,16 +606,17 @@ class LlamaCppGUI(ttk.Window):
 
     @staticmethod
     def load_app_config_statically():
-        """Loads language and theme before the main window is created."""
+        """Loads language, theme and font before the main window is created."""
         try:
             with open("launcher_settings.json", 'r', encoding='utf-8') as f:
                 config = json.load(f)
             # Ставим neural_core по умолчанию для всех новых запусков
             theme = config.get('app_theme', 'neural_core')
             lang = config.get('app_language', 'ru')
-            return theme, lang
+            font = config.get('app_font', 'Consolas')
+            return theme, lang, font
         except (IOError, json.JSONDecodeError):
-            return 'neural_core', 'ru'
+            return 'neural_core', 'ru', 'Consolas'
 
     def define_default_settings(self):
         self.defaults = {
@@ -622,7 +630,7 @@ class LlamaCppGUI(ttk.Window):
         self.system_params = {key: tk.StringVar(value=val) for key, val in self.defaults["system_params"].items()}
         self.flags = {key: tk.BooleanVar(value=val) for key, val in self.defaults["flags"].items()}
         # 12 custom parameters (slots)
-        self.custom_params = [(tk.StringVar(value=""), tk.StringVar(value="")) for _ in range(12)]
+        self.custom_params = [(tk.BooleanVar(value=True), tk.StringVar(value=""), tk.StringVar(value="")) for _ in range(12)]
         
         # New Raw Args parameter
         self.raw_args = tk.StringVar(value="")
@@ -662,6 +670,22 @@ class LlamaCppGUI(ttk.Window):
         self.theme_menu.add_radiobutton(label=self.translate("theme_darkly"), variable=self.theme_var, value="darkly", command=self.on_theme_change)
         self.theme_menu.add_radiobutton(label=self.translate("theme_litera"), variable=self.theme_var, value="litera", command=self.on_theme_change)
         self.theme_menu.add_radiobutton(label=self.translate("theme_superhero"), variable=self.theme_var, value="superhero", command=self.on_theme_change)
+        
+        self.font_menu = tk.Menu(self.settings_menu, tearoff=0)
+        self.settings_menu.add_cascade(label=self.translate("font_menu"), menu=self.font_menu)
+        self.font_menu.add_radiobutton(label="Consolas", variable=self.font_var, value="Consolas", command=self.on_font_change)
+        self.font_menu.add_radiobutton(label="Lucida Console", variable=self.font_var, value="Lucida Console", command=self.on_font_change)
+        self.font_menu.add_radiobutton(label="Courier New", variable=self.font_var, value="Courier New", command=self.on_font_change)
+        self.font_menu.add_radiobutton(label="Cascadia Code", variable=self.font_var, value="Cascadia Code", command=self.on_font_change)
+        self.font_menu.add_separator()
+        self.font_menu.add_radiobutton(label="Iosevka (Narrow/Tall)", variable=self.font_var, value="Iosevka", command=self.on_font_change)
+        self.font_menu.add_radiobutton(label="Ubuntu Mono (Narrow)", variable=self.font_var, value="Ubuntu Mono", command=self.on_font_change)
+        self.font_menu.add_radiobutton(label="Inconsolata (Narrow)", variable=self.font_var, value="Inconsolata", command=self.on_font_change)
+        self.font_menu.add_radiobutton(label="Victor Mono (Narrow/Tall)", variable=self.font_var, value="Victor Mono", command=self.on_font_change)
+        self.font_menu.add_radiobutton(label="Fira Code", variable=self.font_var, value="Fira Code", command=self.on_font_change)
+        self.font_menu.add_radiobutton(label="JetBrains Mono", variable=self.font_var, value="JetBrains Mono", command=self.on_font_change)
+        self.font_menu.add_radiobutton(label="PT Mono", variable=self.font_var, value="PT Mono", command=self.on_font_change)
+        self.font_menu.add_radiobutton(label="DejaVu Sans Mono", variable=self.font_var, value="DejaVu Sans Mono", command=self.on_font_change)
 
         self.help_menu = tk.Menu(self.menu_bar, tearoff=0)
         self.menu_bar.add_cascade(label=self.translate("help_menu"), menu=self.help_menu)
@@ -717,7 +741,7 @@ class LlamaCppGUI(ttk.Window):
 
         # Backend selection
         backend_selection_frame = ttk.Frame(self.server_frame)
-        backend_selection_frame.pack(fill=X, pady=5)
+        backend_selection_frame.pack(fill=X, pady=(10, 5), padx=10)
         ttk.Label(backend_selection_frame, text=self.translate("backend_selection")).pack(side=LEFT, padx=5)
         ttk.Radiobutton(backend_selection_frame, text=self.translate("backend_cpu"), 
                        variable=self.selected_backend, value="cpu").pack(side=LEFT, padx=5)
@@ -731,7 +755,8 @@ class LlamaCppGUI(ttk.Window):
         
         for backend in ["cpu", "vulkan", "mixed"]:
             frame = ttk.Frame(self.server_frame)
-            frame.pack(fill=X, pady=2, padx=5)
+            bottom_pady = 10 if backend == "mixed" else 2
+            frame.pack(fill=X, pady=(2, bottom_pady), padx=10)
             
             # Мітка фіксованої ширини
             label = ttk.Label(frame, text=self.translate(backend_labels[backend]), width=8, anchor="w")
@@ -759,10 +784,10 @@ class LlamaCppGUI(ttk.Window):
         self.model_frame.pack(fill=X, expand=True)
         self.model_path = tk.StringVar()
         ttk.Entry(self.model_frame, textvariable=self.model_path, state="readonly").pack(
-            side=LEFT, fill=X, expand=True, padx=5, pady=5)
+            side=LEFT, fill=X, expand=True, padx=(10, 5), pady=10)
         self.browse_model_btn = ttk.Button(self.model_frame, text=self.translate("browse_button"), 
                                           command=self.browse_model)
-        self.browse_model_btn.pack(side=LEFT, padx=5, pady=5)
+        self.browse_model_btn.pack(side=LEFT, padx=(5, 10), pady=10)
 
         # Рядок 3: Notebook для налаштувань
         self.settings_notebook = ttk.Notebook(parent, bootstyle="secondary")
@@ -824,7 +849,7 @@ class LlamaCppGUI(ttk.Window):
         self.log_frame.pack(fill=BOTH, expand=True)
         
         self.llama_output_area = scrolledtext.ScrolledText(self.log_frame, wrap=tk.WORD, height=12)
-        self.llama_output_area.pack(fill=BOTH, expand=True, padx=5, pady=5)
+        self.llama_output_area.pack(fill=BOTH, expand=True, padx=10, pady=10)
         self.llama_output_area.configure(state='disabled')
 
     def populate_main_sampling_tab(self, parent):
@@ -849,7 +874,7 @@ class LlamaCppGUI(ttk.Window):
         right_frame = ttk.LabelFrame(container, text=self.translate("flags"))
         right_frame.grid(row=0, column=2, sticky="nsew", padx=(5, 0))
         
-        # === Ліва колонка: Ключові параметри ===
+        # === Ліва колонка: Ключові параметры ===
         key_params = [
             ("port", "port"),
             ("ctx_size", "context"),
@@ -861,7 +886,8 @@ class LlamaCppGUI(ttk.Window):
         self.param_labels = {}
         for i, (key, text_key) in enumerate(key_params):
             frame = ttk.Frame(left_frame)
-            frame.pack(fill=X, pady=3)
+            top_pady = 10 if i == 0 else 3
+            frame.pack(fill=X, pady=(top_pady, 3), padx=12)
             
             label = ttk.Label(frame, text=self.translate(text_key), width=20, anchor="w")
             label.pack(side=LEFT)
@@ -871,17 +897,17 @@ class LlamaCppGUI(ttk.Window):
             entry.pack(side=RIGHT)
         
         # Роздільник і продуктивність
-        ttk.Separator(left_frame, orient=HORIZONTAL).pack(fill=X, pady=10)
+        ttk.Separator(left_frame, orient=HORIZONTAL).pack(fill=X, pady=10, padx=12)
         
         perf_frame = ttk.Frame(left_frame)
-        perf_frame.pack(fill=X, pady=2)
+        perf_frame.pack(fill=X, pady=2, padx=12)
         
         perf_label = ttk.Label(perf_frame, text=self.translate("performance"), font=("", 9, "bold"))
         perf_label.pack(anchor="w", pady=(0, 5))
         
         self.mlock_cb = ttk.Checkbutton(left_frame, text=self.translate("mlock"), 
                                        variable=self.flags["mlock"])
-        self.mlock_cb.pack(anchor="w", padx=5, pady=2)
+        self.mlock_cb.pack(anchor="w", padx=12, pady=(2, 10))
         
         # === Середня колонка: Параметри генерації ===
         sampling_params = [
@@ -913,7 +939,8 @@ class LlamaCppGUI(ttk.Window):
         self.sampling_labels = {}
         for i, (key, text_key) in enumerate(sampling_params):
             frame = ttk.Frame(middle_frame)
-            frame.pack(fill=X, pady=3)
+            top_pady = 10 if i == 0 else 3
+            frame.pack(fill=X, pady=(top_pady, 3), padx=12)
             
             label = ttk.Label(frame, text=self.translate(text_key), width=20, anchor="w")
             label.pack(side=LEFT)
@@ -937,10 +964,10 @@ class LlamaCppGUI(ttk.Window):
                 ToolTip(entry, lambda k=key: tooltips_en[k])
         
         # Роздільник і мережеві налаштування
-        ttk.Separator(middle_frame, orient=HORIZONTAL).pack(fill=X, pady=10)
+        ttk.Separator(middle_frame, orient=HORIZONTAL).pack(fill=X, pady=10, padx=12)
         
         net_frame = ttk.Frame(middle_frame)
-        net_frame.pack(fill=X, pady=2)
+        net_frame.pack(fill=X, pady=2, padx=12)
         
         net_label = ttk.Label(net_frame, text=self.translate("network_settings"), font=("", 9, "bold"))
         net_label.pack(anchor="w", pady=(0, 5))
@@ -961,7 +988,8 @@ class LlamaCppGUI(ttk.Window):
         self.system_labels = {}
         for i, (key, text_key) in enumerate({"host": "host", "api_key": "api_key"}.items()):
             frame = ttk.Frame(middle_frame)
-            frame.pack(fill=X, pady=3)
+            bottom_pady = 10 if i == 1 else 3
+            frame.pack(fill=X, pady=(3, bottom_pady), padx=12)
             
             label = ttk.Label(frame, text=self.translate(text_key), width=15, anchor="w")
             label.pack(side=LEFT)
@@ -1008,9 +1036,11 @@ class LlamaCppGUI(ttk.Window):
         }
         
         self.flag_cbs = {}
-        for key, cb_text in flags_list:
+        for i, (key, cb_text) in enumerate(flags_list):
             frame = ttk.Frame(right_frame)
-            frame.pack(fill=X, pady=8, anchor="w")
+            top_pady = 12 if i == 0 else 8
+            bottom_pady = 12 if i == len(flags_list)-1 else 8
+            frame.pack(fill=X, pady=(top_pady, bottom_pady), anchor="w", padx=12)
             
             cb = ttk.Checkbutton(frame, text=self.translate(cb_text), variable=self.flags[key])
             cb.pack(side=LEFT, anchor="w")
@@ -1052,17 +1082,22 @@ class LlamaCppGUI(ttk.Window):
         right_column.pack(side=RIGHT, fill=BOTH, expand=True)
         
         # Додаємо параметри (6 в кожній колонці)
-        for i, (k_var, v_var) in enumerate(self.custom_params):
+        for i, (chk_var, k_var, v_var) in enumerate(self.custom_params):
             if i < 6:
                 column = left_column
                 param_num = i + 1
+                row_idx = i
             else:
                 column = right_column
                 param_num = i + 1
+                row_idx = i - 6
                 
             frame = ttk.Frame(column)
-            frame.pack(fill=X, pady=3)
+            top_pady = 10 if row_idx == 0 else 3
+            bottom_pady = 10 if row_idx == 5 else 3
+            frame.pack(fill=X, pady=(top_pady, bottom_pady), padx=10)
             
+            ttk.Checkbutton(frame, variable=chk_var).pack(side=LEFT, padx=(0, 5))
             ttk.Label(frame, text=f"{param_num}:", width=3).pack(side=LEFT, padx=(0, 5))
             ttk.Entry(frame, textvariable=k_var, width=22).pack(side=LEFT, padx=5)
             ttk.Entry(frame, textvariable=v_var).pack(side=LEFT, fill=X, expand=True, padx=5)
@@ -1078,10 +1113,10 @@ class LlamaCppGUI(ttk.Window):
         raw_args_frame.pack(fill=X, pady=10)
         self.raw_args_label_frame = raw_args_frame # сохраним для перевода
         
-        ttk.Entry(raw_args_frame, textvariable=self.raw_args).pack(fill=X, padx=5, pady=5)
+        ttk.Entry(raw_args_frame, textvariable=self.raw_args).pack(fill=X, padx=10, pady=(10, 5))
         
         self.info_raw_args_label = ttk.Label(raw_args_frame, text=self.translate("info_raw_args"), font=("", 8), foreground="gray")
-        self.info_raw_args_label.pack(anchor="w", padx=5, pady=(0, 5))
+        self.info_raw_args_label.pack(anchor="w", padx=10, pady=(0, 10))
 
     def create_open_webui_tab(self, parent):
         parent.grid_rowconfigure(1, weight=1)
@@ -1092,7 +1127,7 @@ class LlamaCppGUI(ttk.Window):
         
         # Інформація про WebUI
         info_frame = ttk.Frame(self.webui_control_frame)
-        info_frame.pack(fill=X, pady=(0, 10))
+        info_frame.pack(fill=X, pady=(10, 10), padx=10)
         
         info_text = ttk.Label(info_frame, text=self.translate("info_webui"), 
                              font=("", 8), foreground="gray")
@@ -1100,22 +1135,22 @@ class LlamaCppGUI(ttk.Window):
         
         # Кнопки керування WebUI
         buttons_frame = ttk.Frame(self.webui_control_frame)
-        buttons_frame.pack(fill=X)
+        buttons_frame.pack(fill=X, padx=10, pady=(0, 10))
         
         self.webui_start_button = ttk.Button(buttons_frame, text=self.translate("run_webui_button"), 
-                                            command=self.start_webui_server, bootstyle=SUCCESS)
-        self.webui_start_button.pack(side=LEFT, padx=10, pady=10)
+                                             command=self.start_webui_server, bootstyle=SUCCESS)
+        self.webui_start_button.pack(side=LEFT, padx=(0, 10), pady=0)
         
         self.webui_stop_button = ttk.Button(buttons_frame, text=self.translate("stop_webui_button"), 
-                                           state="disabled", command=self.stop_webui_server, bootstyle=DANGER)
-        self.webui_stop_button.pack(side=LEFT, padx=10, pady=10)
+                                            state="disabled", command=self.stop_webui_server, bootstyle=DANGER)
+        self.webui_stop_button.pack(side=LEFT, padx=10, pady=0)
         
         # Логи WebUI
         self.webui_log_frame = ttk.LabelFrame(parent, text=self.translate("webui_logs"))
         self.webui_log_frame.grid(row=1, column=0, sticky="nsew", padx=5, pady=10)
         
         self.webui_output_area = scrolledtext.ScrolledText(self.webui_log_frame, wrap=tk.WORD)
-        self.webui_output_area.pack(fill=BOTH, expand=True, padx=5, pady=5)
+        self.webui_output_area.pack(fill=BOTH, expand=True, padx=10, pady=10)
         self.webui_output_area.configure(state='disabled')
 
     def on_language_change(self):
@@ -1129,19 +1164,22 @@ class LlamaCppGUI(ttk.Window):
         self.apply_theme_to_logs()
         self.save_app_config()
 
+    def on_font_change(self):
+        self.apply_theme_to_logs()
+        self.save_app_config()
+
     def apply_theme_to_logs(self):
         """Applies appropriate log colors based on the current theme."""
         theme_name = self.style.theme.name
+        font_family = self.font_var.get()
+        font_style = (font_family, 10)
         
         if theme_name == "neural_core":
             log_colors = {'bg': '#05080c', 'fg': '#00f0ff'} # Cyberpunk terminal look
-            font_style = ("Consolas", 10)
         elif self.style.theme.type == 'dark':
             log_colors = {'bg': '#2b2b2b', 'fg': '#d3d3d3'}
-            font_style = ("Consolas", 10)
         else:
             log_colors = {'bg': '#ffffff', 'fg': '#333333'}
-            font_style = ("Consolas", 10)
             
         self.llama_output_area.config(background=log_colors['bg'], foreground=log_colors['fg'], font=font_style)
         self.webui_output_area.config(background=log_colors['bg'], foreground=log_colors['fg'], font=font_style)
@@ -1168,6 +1206,7 @@ class LlamaCppGUI(ttk.Window):
         # Оновлення підменю налаштувань
         self.settings_menu.entryconfigure(0, label=self.translate("language_menu"))
         self.settings_menu.entryconfigure(1, label=self.translate("theme_menu"))
+        self.settings_menu.entryconfigure(2, label=self.translate("font_menu"))
         
         # Оновлення тем у підменю
         for i, theme_key in enumerate(["theme_neural", "theme_darkly", "theme_litera", "theme_superhero"]):
@@ -1333,8 +1372,9 @@ class LlamaCppGUI(ttk.Window):
         for key, value in self.defaults["flags"].items(): 
             self.flags[key].set(value)
         for i in range(len(self.custom_params)): 
-            self.custom_params[i][0].set("")
+            self.custom_params[i][0].set(True)
             self.custom_params[i][1].set("")
+            self.custom_params[i][2].set("")
         self.raw_args.set("")
         self.log_llama_message(self.translate("settings_reset"))
     
@@ -1374,7 +1414,9 @@ class LlamaCppGUI(ttk.Window):
             if var.get():
                 command.append(f"--{key.replace('_', '-')}")
         
-        for key_var, val_var in self.custom_params:
+        for chk_var, key_var, val_var in self.custom_params:
+            if not chk_var.get():
+                continue
             key = key_var.get().strip()
             val = val_var.get().strip()
             if key:
@@ -1520,6 +1562,7 @@ class LlamaCppGUI(ttk.Window):
         
         config['app_language'] = self.language.get()
         config['app_theme'] = self.theme_var.get()
+        config['app_font'] = self.font_var.get()
         
         with open(self.settings_file, 'w', encoding='utf-8') as f:
             json.dump(config, f, indent=4)
@@ -1540,13 +1583,17 @@ class LlamaCppGUI(ttk.Window):
             "sampling_params": {k: v.get() for k, v in self.sampling_params.items()},
             "system_params": {k: v.get() for k, v in self.system_params.items()},
             "flags": {k: v.get() for k, v in self.flags.items()},
-            "custom_params": [(k.get(), v.get()) for k, v in self.custom_params],
+            "custom_params": [(chk.get(), k.get(), v.get()) for chk, k, v in self.custom_params],
             "raw_args": self.raw_args.get(),
             "selected_backend": self.selected_backend.get()
         }
         
         config["last_model_path"] = model_path
         config["server_paths"] = {k: v.get() for k, v in self.server_paths.items()}
+        
+        config['app_language'] = self.language.get()
+        config['app_theme'] = self.theme_var.get()
+        config['app_font'] = self.font_var.get()
         
         with open(self.settings_file, 'w', encoding='utf-8') as f:
             json.dump(config, f, indent=4, ensure_ascii=False)
@@ -1576,10 +1623,18 @@ class LlamaCppGUI(ttk.Window):
                 
                 # Завантажуємо додаткові параметри
                 if "custom_params" in settings:
-                    for i, (k, v) in enumerate(settings["custom_params"]):
+                    for i, param_data in enumerate(settings["custom_params"]):
                         if i < len(self.custom_params):
-                            self.custom_params[i][0].set(k)
-                            self.custom_params[i][1].set(v)
+                            if len(param_data) == 3:
+                                chk, k, v = param_data
+                                self.custom_params[i][0].set(chk)
+                                self.custom_params[i][1].set(k)
+                                self.custom_params[i][2].set(v)
+                            elif len(param_data) == 2:
+                                k, v = param_data
+                                self.custom_params[i][0].set(True)
+                                self.custom_params[i][1].set(k)
+                                self.custom_params[i][2].set(v)
                             
                 # Завантажуємо сырые аргументы
                 if "raw_args" in settings:
