@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 - Individual checkboxes for all 12 custom parameters, allowing toggling without clearing values.
+- Editable input field for Open WebUI launch command with auto-save to global settings.
 - New narrow monospace fonts (Inconsolata, Victor Mono, Fira Code, DejaVu Sans Mono) in settings to save horizontal space in logs.
 
 ### Fixed
